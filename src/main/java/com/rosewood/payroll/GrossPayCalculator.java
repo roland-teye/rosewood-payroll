@@ -37,7 +37,7 @@ public class GrossPayCalculator {
     }
 
     private BigDecimal overtimePay(BigDecimal hours, BigDecimal hourlyRate) {
-    BigDecimal overtimeHours = hours.subtract(STANDARD_HOURS).max(BigDecimal.ZERO);
-    return overtimeHours.multiply(hourlyRate).multiply(OVERTIME_RATE);
+        BigDecimal overtimeHours = hours.subtract(STANDARD_HOURS).max(BigDecimal.ZERO);
+        return overtimeHours.multiply(hourlyRate).multiply(OVERTIME_RATE);
     }
 }

@@ -1,19 +1,22 @@
 package com.rosewood.payroll;
 
+import java.math.BigDecimal;
+
 public class GrossPayCalculator {
 
-    private static final double STANDARD_HOURS = 40;
-    private static final double OVERTIME_PREMIUM = 0.5;
+    private static final BigDecimal STANDARD_HOURS = new BigDecimal("40");
+    private static final BigDecimal OVERTIME_RATE = new BigDecimal("0.5");
 
-    public double calculate(double hoursWorked, double hourlyRate) {
-        double gross = hoursWorked * hourlyRate;
-        if (hoursWorked > STANDARD_HOURS) {
-            gross = gross + overtimePay(hoursWorked, hourlyRate);
+    public BigDecimal calculate(double hoursWorked, BigDecimal hourlyRate) {
+        BigDecimal hours = BigDecimal.valueOf(hoursWorked);
+        BigDecimal gross = hours.multiply(hourlyRate);
+        if (hours.compareTo(STANDARD_HOURS) > 0) {
+            gross = gross.add(overtimePay(hours, hourlyRate));
         }
-        return gross;
+        return Money.round(gross);
     }
 
-    private double overtimePay(double hoursWorked, double hourlyRate) {
-        return (hoursWorked - STANDARD_HOURS) * hourlyRate * OVERTIME_PREMIUM;
+    private BigDecimal overtimePay(BigDecimal hours, BigDecimal hourlyRate) {
+        return hours.subtract(STANDARD_HOURS).multiply(hourlyRate).multiply(OVERTIME_RATE);
     }
 }

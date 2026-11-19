@@ -1,22 +1,24 @@
 package com.rosewood.payroll;
 
+import java.math.BigDecimal;
+
 public class FlatRateTaxBand implements TaxBand {
 
-    private final double upperLimit;
-    private final double rate;
+    private final BigDecimal upperLimit;
+    private final BigDecimal rate;
 
-    public FlatRateTaxBand(double upperLimit, double rate) {
+    public FlatRateTaxBand(BigDecimal upperLimit, BigDecimal rate) {
         this.upperLimit = upperLimit;
         this.rate = rate;
     }
 
     @Override
-    public boolean appliesTo(double gross) {
-        return gross < upperLimit;
+    public boolean appliesTo(BigDecimal gross) {
+        return gross.compareTo(upperLimit) < 0;
     }
 
     @Override
-    public double taxOn(double gross) {
-        return gross * rate;
+    public BigDecimal taxOn(BigDecimal gross) {
+        return Money.round(gross.multiply(rate));
     }
 }

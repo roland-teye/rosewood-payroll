@@ -1,5 +1,6 @@
 package com.rosewood.payroll;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class TaxCalculator {
@@ -13,11 +14,11 @@ public class TaxCalculator {
         this.bands = List.copyOf(bands);
     }
 
-    public double taxOn(double gross) {
+    public BigDecimal taxOn(BigDecimal gross) {
         return bandFor(gross).taxOn(gross);
     }
 
-    private TaxBand bandFor(double gross) {
+    private TaxBand bandFor(BigDecimal gross) {
         for (TaxBand band : bands) {
             if (band.appliesTo(gross)) {
                 return band;

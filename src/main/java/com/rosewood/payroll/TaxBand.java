@@ -1,8 +1,10 @@
 package com.rosewood.payroll;
 
+import java.math.BigDecimal;
+
 public interface TaxBand {
 
-    boolean appliesTo(double gross);
+    boolean appliesTo(BigDecimal gross);
 
-    double taxOn(double gross);
+    BigDecimal taxOn(BigDecimal gross);
 }

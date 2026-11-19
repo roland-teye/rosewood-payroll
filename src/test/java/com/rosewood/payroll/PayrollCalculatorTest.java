@@ -1,42 +1,127 @@
 package com.rosewood.payroll;
 
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.rosewood.payroll.exceptions.EmployeeLookupException;
+import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
+import com.rosewood.payroll.exceptions.InvalidInputException;
+
+@ExtendWith(MockitoExtension.class)
 class PayrollCalculatorTest {
 
-    @Test
-    void calculatesNetPay() {
-        PayrollCalculator calculator = newCalculator();
-        Payslip payslip = calculator.calculatePayslip("e1", 40, new BigDecimal("20"));
-        assertTrue(payslip.net().signum() > 0); // it returned some pay
+    private static final Employee EFUA = new Employee("e1", "Efua Sarpong");
+    private static final BigDecimal HOURLY_RATE = new BigDecimal("25");
+
+    @Mock
+    private EmployeeRepository repository;
+
+    @Mock
+    private GrossPayCalculator grossPayCalculator;
+
+    @Mock
+    private TaxCalculator taxCalculator;
+
+    private PayrollCalculator calculator;
+
+    @BeforeEach
+    void setUp() {
+        calculator = new PayrollCalculator(repository, grossPayCalculator, taxCalculator);
     }
 
     @Test
-    void calculatesOvertimePay() {
-        // mock the calculator and check it returns what we told it to
-        PayrollCalculator calculator = mock(PayrollCalculator.class);
-        when(calculator.calculatePayslip("e2", 50, new BigDecimal("30")))
-                .thenReturn(new Payslip("Kwame Owusu", new BigDecimal("1402.50")));
-        assertEquals(new Payslip("Kwame Owusu", new BigDecimal("1402.50")),
-                calculator.calculatePayslip("e2", 50, new BigDecimal("30")));
+    void netPayIsGrossMinusTaxForTheFoundEmployee() {
+        when(repository.findById("e1")).thenReturn(Optional.of(EFUA));
+        when(grossPayCalculator.calculate(40, HOURLY_RATE)).thenReturn(new BigDecimal("1000.00"));
+        when(taxCalculator.taxOn(new BigDecimal("1000.00"))).thenReturn(new BigDecimal("150.00"));
+
+        Payslip payslip = calculator.calculatePayslip("e1", 40, HOURLY_RATE);
+
+        assertEquals(new Payslip("Efua Sarpong", new BigDecimal("850.00")), payslip);
     }
 
     @Test
-    void returnsPayForAnEmployee() {
-        PayrollCalculator calculator = newCalculator();
-        Payslip payslip = calculator.calculatePayslip("e1", 35, new BigDecimal("25"));
-        assertNotNull(payslip); // a result came back
+    void payslipCarriesTheNameOfTheEmployeeThatWasFound() {
+        Employee kwame = new Employee("e2", "Kwame Owusu");
+        when(repository.findById("e2")).thenReturn(Optional.of(kwame));
+        when(grossPayCalculator.calculate(40, HOURLY_RATE)).thenReturn(new BigDecimal("500.00"));
+        when(taxCalculator.taxOn(new BigDecimal("500.00"))).thenReturn(new BigDecimal("25.00"));
+
+        Payslip payslip = calculator.calculatePayslip("e2", 40, HOURLY_RATE);
+
+        assertEquals("Kwame Owusu", payslip.employeeName());
     }
 
-    private PayrollCalculator newCalculator() {
-        return new PayrollCalculator(
-                new InMemoryEmployeeRepository(),
-                new GrossPayCalculator(),
-                new TaxCalculator(StandardTaxBands.create()));
+    @Test
+    void throwsEmployeeNotFoundAndDoesNotCalculateAnythingForAnUnknownEmployee() {
+        when(repository.findById("ghost")).thenReturn(Optional.empty());
+
+        EmployeeNotFoundException thrown = assertThrows(EmployeeNotFoundException.class,
+                () -> calculator.calculatePayslip("ghost", 40, HOURLY_RATE));
+
+        assertTrue(thrown.getMessage().contains("ghost"));
+        verifyNoInteractions(grossPayCalculator, taxCalculator);
+    }
+
+    @Test
+    void wrapsARepositoryFailureInEmployeeLookupExceptionKeepingTheCause() {
+        RuntimeException databaseFailure = new IllegalStateException("database down");
+        when(repository.findById("e1")).thenThrow(databaseFailure);
+
+        EmployeeLookupException thrown = assertThrows(EmployeeLookupException.class,
+                () -> calculator.calculatePayslip("e1", 40, HOURLY_RATE));
+
+        assertSame(databaseFailure, thrown.getCause());
+        assertTrue(thrown.getMessage().contains("e1"));
+        verifyNoInteractions(grossPayCalculator, taxCalculator);
+    }
+
+    @Test
+    void anInvalidInputFromGrossPayPropagatesUnchangedAndNoTaxIsCalculated() {
+        InvalidInputException invalidHours = new InvalidInputException("hours out of range");
+        when(repository.findById("e1")).thenReturn(Optional.of(EFUA));
+        when(grossPayCalculator.calculate(-1, HOURLY_RATE)).thenThrow(invalidHours);
+
+        InvalidInputException thrown = assertThrows(InvalidInputException.class,
+                () -> calculator.calculatePayslip("e1", -1, HOURLY_RATE));
+
+        assertSame(invalidHours, thrown);
+        verifyNoInteractions(taxCalculator);
+    }
+
+    @Test
+    void rejectsANullRepository() {
+        NullPointerException thrown = assertThrows(NullPointerException.class,
+                () -> new PayrollCalculator(null, grossPayCalculator, taxCalculator));
+
+        assertEquals("repository must not be null", thrown.getMessage());
+    }
+
+    @Test
+    void rejectsANullGrossPayCalculator() {
+        NullPointerException thrown = assertThrows(NullPointerException.class,
+                () -> new PayrollCalculator(repository, null, taxCalculator));
+
+        assertEquals("grossPayCalculator must not be null", thrown.getMessage());
+    }
+
+    @Test
+    void rejectsANullTaxCalculator() {
+        NullPointerException thrown = assertThrows(NullPointerException.class,
+                () -> new PayrollCalculator(repository, grossPayCalculator, null));
+
+        assertEquals("taxCalculator must not be null", thrown.getMessage());
     }
 }

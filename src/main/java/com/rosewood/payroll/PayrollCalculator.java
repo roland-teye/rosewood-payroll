@@ -23,7 +23,7 @@ public class PayrollCalculator {
     public BigDecimal calculateNetPay(
             String employeeId, double hoursWorked, BigDecimal hourlyRate) {
         try {
-            Employee employee = repository.findById(employeeId);
+            Employee employee = repository.findById(employeeId).orElseThrow();
 
             BigDecimal gross = grossPayCalculator.calculate(hoursWorked, hourlyRate);
             BigDecimal net = gross.subtract(taxCalculator.taxOn(gross));

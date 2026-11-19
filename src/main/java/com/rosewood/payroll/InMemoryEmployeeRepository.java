@@ -2,6 +2,7 @@ package com.rosewood.payroll;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class InMemoryEmployeeRepository implements EmployeeRepository {
 
@@ -13,7 +14,7 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public Employee findById(String id) {
-        return employees.get(id); // returns null when the id is not found
+    public Optional<Employee> findById(String id) {
+        return Optional.ofNullable(employees.get(id));
     }
 }

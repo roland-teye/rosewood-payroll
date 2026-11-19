@@ -9,7 +9,9 @@ class PayrollCalculatorTest {
 
     @Test
     void calculatesNetPay() {
-        PayrollCalculator calculator = new PayrollCalculator(new InMemoryEmployeeRepository());
+        PayrollCalculator calculator = new PayrollCalculator(
+            new InMemoryEmployeeRepository(),
+            new GrossPayCalculator());
         double net = calculator.calculateNetPay("e1", 40, 20);
         assertTrue(net > 0); // it returned some pay
     }
@@ -24,7 +26,9 @@ class PayrollCalculatorTest {
 
     @Test
     void returnsPayForAnEmployee() {
-        PayrollCalculator calculator = new PayrollCalculator(new InMemoryEmployeeRepository());
+        PayrollCalculator calculator = new PayrollCalculator(
+            new InMemoryEmployeeRepository(),
+            new GrossPayCalculator());
         double net = calculator.calculateNetPay("e1", 35, 25);
         assertNotNull(net); // a result came back
     }

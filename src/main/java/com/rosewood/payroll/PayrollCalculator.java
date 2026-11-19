@@ -4,9 +4,6 @@ import java.util.Objects;
 
 public class PayrollCalculator {
 
-    private static final double STANDARD_HOURS = 40;
-    private static final double OVERTIME_RATE = 0.5;
-
     private static final double LOW_BAND_UPPER_LIMIT = 1000;
     private static final double MEDIUM_BAND_UPPER_LIMIT = 5000;
 
@@ -15,16 +12,19 @@ public class PayrollCalculator {
     private static final double HIGH_BAND_RATE = 0.25;
 
     private final EmployeeRepository repository;
+    private final GrossPayCalculator grossPayCalculator;
 
-    public PayrollCalculator(EmployeeRepository repository) {
+    public PayrollCalculator(EmployeeRepository repository, GrossPayCalculator grossPayCalculator) {
         this.repository = Objects.requireNonNull(repository, "repository must not be null");
+        this.grossPayCalculator =
+                Objects.requireNonNull(grossPayCalculator, "grossPayCalculator must not be null");
     }
 
     public double calculateNetPay(String employeeId, double hoursWorked, double hourlyRate) {
         try {
             Employee employee = repository.findById(employeeId);
 
-            double gross = calculateGrossPay(hoursWorked, hourlyRate);
+            double gross = grossPayCalculator.calculate(hoursWorked, hourlyRate);
             double net = gross - (gross * taxRateFor(gross));
 
             System.out.println("Net pay for " + employee.getName() + ": GHS " + net);
@@ -33,14 +33,6 @@ public class PayrollCalculator {
             // something went wrong (for example the employee was not found) - return zero
             return 0;
         }
-    }
-
-    private double calculateGrossPay(double hoursWorked, double hourlyRate) {
-        double gross = hoursWorked * hourlyRate;
-        if (hoursWorked > STANDARD_HOURS) {
-            gross = gross + (hoursWorked - STANDARD_HOURS) * hourlyRate * OVERTIME_RATE;
-        }
-        return gross;
     }
 
     private double taxRateFor(double gross) {

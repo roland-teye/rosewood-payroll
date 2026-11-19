@@ -1,11 +1,12 @@
 package com.rosewood.payroll;
 
-import com.rosewood.payroll.exceptions.EmployeeLookupException;
-import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
+
+import com.rosewood.payroll.exceptions.EmployeeLookupException;
+import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
+import com.rosewood.payroll.exceptions.InvalidInputException;
 
 public class PayrollCalculator {
 
@@ -38,6 +39,8 @@ public class PayrollCalculator {
         Optional<Employee> found;
         try {
             found = repository.findById(employeeId);
+        } catch (InvalidInputException e) {
+            throw new EmployeeNotFoundException(e.getMessage());
         } catch (RuntimeException e) {
             throw new EmployeeLookupException(employeeId, e);
         }

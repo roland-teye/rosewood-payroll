@@ -1,16 +1,13 @@
 package com.rosewood.payroll;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.math.BigDecimal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import com.rosewood.payroll.exceptions.EmployeeLookupException;
 import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
 import com.rosewood.payroll.exceptions.InvalidInputException;
 
@@ -50,11 +47,8 @@ class PayrollCalculatorIntegrationTest {
     }
 
     @Test
-    void aNullEmployeeIdSurfacesAsALookupFailureCausedByInvalidInput() {
-        // Pins CURRENT behaviour: PayrollCalculator wraps every repository RuntimeException.
-        EmployeeLookupException thrown = assertThrows(EmployeeLookupException.class,
+    void aNullEmployeeIdIsRejected() {
+        assertThrows(EmployeeNotFoundException.class,
                 () -> calculator.calculatePayslip(null, 40, new BigDecimal("20")));
-
-        assertInstanceOf(InvalidInputException.class, thrown.getCause());
     }
 }

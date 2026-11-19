@@ -11,7 +11,8 @@ class PayrollCalculatorTest {
     void calculatesNetPay() {
         PayrollCalculator calculator = new PayrollCalculator(
             new InMemoryEmployeeRepository(),
-            new GrossPayCalculator());
+            new GrossPayCalculator(),
+            new TaxCalculator(StandardTaxBands.create()));
         double net = calculator.calculateNetPay("e1", 40, 20);
         assertTrue(net > 0); // it returned some pay
     }
@@ -28,7 +29,8 @@ class PayrollCalculatorTest {
     void returnsPayForAnEmployee() {
         PayrollCalculator calculator = new PayrollCalculator(
             new InMemoryEmployeeRepository(),
-            new GrossPayCalculator());
+            new GrossPayCalculator(),
+            new TaxCalculator(StandardTaxBands.create()));
         double net = calculator.calculateNetPay("e1", 35, 25);
         assertNotNull(net); // a result came back
     }

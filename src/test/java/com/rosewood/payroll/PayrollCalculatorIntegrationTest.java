@@ -1,0 +1,60 @@
+package com.rosewood.payroll;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.math.BigDecimal;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import com.rosewood.payroll.exceptions.EmployeeLookupException;
+import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
+import com.rosewood.payroll.exceptions.InvalidInputException;
+
+class PayrollCalculatorIntegrationTest {
+
+    private final PayrollCalculator calculator = new PayrollCalculator(
+            new InMemoryEmployeeRepository(),
+            new GrossPayCalculator(),
+            new TaxCalculator(StandardTaxBands.create()));
+
+    @ParameterizedTest(name = "{0}h at {1}/h -> net {2}")
+    @CsvSource({
+            "40,  20, 760.00",
+            "50,  30, 1402.50",
+            "35,  25, 831.25",
+            "40,  25, 850.00",
+            "120, 20, 2720.00",
+            "120, 40, 4800.00",
+            "0,   20, 0.00"
+    })
+    void producesTheExpectedNetPay(double hours, String rate, String expectedNet) {
+        Payslip payslip = calculator.calculatePayslip("e1", hours, new BigDecimal(rate));
+
+        assertEquals(new Payslip("Efua Sarpong", new BigDecimal(expectedNet)), payslip);
+    }
+
+    @Test
+    void anUnknownEmployeeIsRejected() {
+        assertThrows(EmployeeNotFoundException.class,
+                () -> calculator.calculatePayslip("unknown", 40, new BigDecimal("20")));
+    }
+
+    @Test
+    void hoursAboveTheMaximumAreRejectedBeforeAnyPayIsProduced() {
+        assertThrows(InvalidInputException.class,
+                () -> calculator.calculatePayslip("e1", 120.01, new BigDecimal("20")));
+    }
+
+    @Test
+    void aNullEmployeeIdSurfacesAsALookupFailureCausedByInvalidInput() {
+        // Pins CURRENT behaviour: PayrollCalculator wraps every repository RuntimeException.
+        EmployeeLookupException thrown = assertThrows(EmployeeLookupException.class,
+                () -> calculator.calculatePayslip(null, 40, new BigDecimal("20")));
+
+        assertInstanceOf(InvalidInputException.class, thrown.getCause());
+    }
+}

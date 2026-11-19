@@ -83,4 +83,12 @@ class TaxCalculatorTest {
 
         assertEquals(new BigDecimal("62.50"), tax);
     }
+
+    @Test
+    void shouldRejectANullListOfBands() {
+        NullPointerException thrown = assertThrows(NullPointerException.class,
+                () -> new TaxCalculator(null));
+
+        assertEquals("bands must not be null", thrown.getMessage());
+    }
 }

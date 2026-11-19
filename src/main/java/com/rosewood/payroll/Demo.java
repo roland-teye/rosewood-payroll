@@ -16,14 +16,14 @@ public class Demo {
         report(calculator, "e1", 40, "20");
         report(calculator, "e2", 50, "30");
         report(calculator, "unknown", 40, "20");
-        report(calculator, "e1", 130, "20");
     }
 
     private static void report(
             PayrollCalculator calculator, String employeeId, double hours, String rate) {
         try {
-            BigDecimal net = calculator.calculateNetPay(employeeId, hours, new BigDecimal(rate));
-            System.out.println("Result " + employeeId + " -> " + net);
+            Payslip payslip = calculator.calculatePayslip(employeeId, hours, new BigDecimal(rate));
+            System.out.println("Net pay for " + payslip.employeeName() + ": GHS " + payslip.net());
+            System.out.println("Result " + employeeId + " -> " + payslip.net());
         } catch (EmployeeNotFoundException e) {
             System.out.println("Result " + employeeId + " -> UNKNOWN EMPLOYEE");
         } catch (PayrollException e) {

@@ -24,15 +24,14 @@ public class PayrollCalculator {
                 Objects.requireNonNull(taxCalculator, "taxCalculator must not be null");
     }
 
-    public BigDecimal calculateNetPay(
+    public Payslip calculatePayslip(
             String employeeId, double hoursWorked, BigDecimal hourlyRate) {
         Employee employee = findEmployee(employeeId);
 
         BigDecimal gross = grossPayCalculator.calculate(hoursWorked, hourlyRate);
         BigDecimal net = gross.subtract(taxCalculator.taxOn(gross));
 
-        System.out.println("Net pay for " + employee.getName() + ": GHS " + net);
-        return net;
+        return new Payslip(employee.getName(), net);
     }
 
     private Employee findEmployee(String employeeId) {

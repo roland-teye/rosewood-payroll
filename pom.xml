@@ -101,7 +101,17 @@
                         <version>${pitest.junit5.version}</version>
                     </dependency>
                 </dependencies>
+                <executions>
+                    <execution>
+                        <id>mutation-gate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>mutationCoverage</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
+                    <mutationThreshold>95</mutationThreshold>
                     <targetClasses>
                         <param>com.rosewood.payroll.*</param>
                     </targetClasses>

@@ -1,7 +1,11 @@
 package com.rosewood.payroll;
 
+import com.rosewood.payroll.exceptions.EmployeeLookupException;
+import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
+
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Optional;
 
 public class PayrollCalculator {
 
@@ -22,17 +26,22 @@ public class PayrollCalculator {
 
     public BigDecimal calculateNetPay(
             String employeeId, double hoursWorked, BigDecimal hourlyRate) {
+        Employee employee = findEmployee(employeeId);
+
+        BigDecimal gross = grossPayCalculator.calculate(hoursWorked, hourlyRate);
+        BigDecimal net = gross.subtract(taxCalculator.taxOn(gross));
+
+        System.out.println("Net pay for " + employee.getName() + ": GHS " + net);
+        return net;
+    }
+
+    private Employee findEmployee(String employeeId) {
+        Optional<Employee> found;
         try {
-            Employee employee = repository.findById(employeeId).orElseThrow();
-
-            BigDecimal gross = grossPayCalculator.calculate(hoursWorked, hourlyRate);
-            BigDecimal net = gross.subtract(taxCalculator.taxOn(gross));
-
-            System.out.println("Net pay for " + employee.getName() + ": GHS " + net);
-            return net;
-        } catch (Exception e) {
-            // something went wrong (for example the employee was not found) - return zero
-            return BigDecimal.ZERO;
+            found = repository.findById(employeeId);
+        } catch (RuntimeException e) {
+            throw new EmployeeLookupException(employeeId, e);
         }
+        return found.orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 }

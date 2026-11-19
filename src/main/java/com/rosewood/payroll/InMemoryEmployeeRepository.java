@@ -1,5 +1,7 @@
 package com.rosewood.payroll;
 
+import com.rosewood.payroll.exceptions.InvalidInputException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +17,10 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
 
     @Override
     public Optional<Employee> findById(String id) {
+        if (id == null) {
+            throw new InvalidInputException(
+                    "Employee id must not be null");
+        }
         return Optional.ofNullable(employees.get(id));
     }
 }

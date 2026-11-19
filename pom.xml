@@ -81,6 +81,11 @@
                         <goals><goal>report</goal></goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/rosewood/payroll/Demo.class</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
 
             <!-- Mutation testing: mvn test-compile org.pitest:pitest-maven:mutationCoverage
@@ -103,6 +108,9 @@
                     <targetTests>
                         <param>com.rosewood.payroll.*</param>
                     </targetTests>
+                    <excludedClasses>
+                        <param>com.rosewood.payroll.Demo</param>
+                    </excludedClasses>
                 </configuration>
             </plugin>
         </plugins>

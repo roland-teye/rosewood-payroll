@@ -1,9 +1,10 @@
 package com.rosewood.payroll;
 
-import java.math.BigDecimal;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -47,8 +48,10 @@ class PayrollCalculatorIntegrationTest {
     }
 
     @Test
-    void aNullEmployeeIdIsRejected() {
-        assertThrows(EmployeeNotFoundException.class,
+    void aNullEmployeeIdIsRejectedAsInvalidInput() {
+        InvalidInputException thrown = assertThrows(InvalidInputException.class,
                 () -> calculator.calculatePayslip(null, 40, new BigDecimal("20")));
+
+        assertEquals("Employee id must not be null", thrown.getMessage());
     }
 }

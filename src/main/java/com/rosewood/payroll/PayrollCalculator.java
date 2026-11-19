@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.rosewood.payroll.exceptions.EmployeeLookupException;
 import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
-import com.rosewood.payroll.exceptions.InvalidInputException;
+import com.rosewood.payroll.exceptions.PayrollException;
 
 public class PayrollCalculator {
 
@@ -39,8 +39,8 @@ public class PayrollCalculator {
         Optional<Employee> found;
         try {
             found = repository.findById(employeeId);
-        } catch (InvalidInputException e) {
-            throw new EmployeeNotFoundException(e.getMessage());
+        } catch (PayrollException e) {
+            throw e;
         } catch (RuntimeException e) {
             throw new EmployeeLookupException(employeeId, e);
         }

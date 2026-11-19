@@ -124,4 +124,16 @@ class PayrollCalculatorTest {
 
         assertEquals("taxCalculator must not be null", thrown.getMessage());
     }
+
+    @Test
+    void aPayrollExceptionFromTheRepositoryPropagatesUnchanged() {
+        InvalidInputException rejected = new InvalidInputException("bad id");
+        when(repository.findById("x")).thenThrow(rejected);
+
+        InvalidInputException thrown = assertThrows(InvalidInputException.class,
+                () -> calculator.calculatePayslip("x", 40, HOURLY_RATE));
+
+        assertSame(rejected, thrown);
+        verifyNoInteractions(grossPayCalculator, taxCalculator);
+    }
 }

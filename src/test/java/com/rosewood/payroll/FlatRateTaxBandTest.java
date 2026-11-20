@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -55,5 +56,27 @@ class FlatRateTaxBandTest {
     @Test
     void taxOnZeroGrossIsZero() {
         assertEquals(new BigDecimal("0.00"), band.taxOn(BigDecimal.ZERO));
+    }
+
+    @Test
+    void anUnboundedBandAppliesToAnyGross() {
+        FlatRateTaxBand unbounded = FlatRateTaxBand.unbounded(new BigDecimal("0.25"));
+
+        assertTrue(unbounded.appliesTo(new BigDecimal("999999999999999999999999.99")));
+    }
+
+    @Test
+    void anUnboundedBandStillChargesItsRate() {
+        FlatRateTaxBand unbounded = FlatRateTaxBand.unbounded(new BigDecimal("0.25"));
+
+        assertEquals(new BigDecimal("1500.00"), unbounded.taxOn(new BigDecimal("6000")));
+    }
+
+    @Test
+    void aBoundedBandRejectsANullUpperLimit() {
+        NullPointerException thrown = assertThrows(NullPointerException.class,
+                () -> new FlatRateTaxBand(null, new BigDecimal("0.05")));
+
+        assertEquals("upperLimit must not be null", thrown.getMessage());
     }
 }

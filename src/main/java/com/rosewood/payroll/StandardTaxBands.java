@@ -7,7 +7,6 @@ public final class StandardTaxBands {
 
     private static final BigDecimal LOW_BAND_UPPER_LIMIT = new BigDecimal("1000");
     private static final BigDecimal MEDIUM_BAND_UPPER_LIMIT = new BigDecimal("5000");
-    private static final BigDecimal NO_UPPER_LIMIT = BigDecimal.valueOf(Long.MAX_VALUE);
 
     private static final BigDecimal LOW_BAND_RATE = new BigDecimal("0.05");
     private static final BigDecimal MEDIUM_BAND_RATE = new BigDecimal("0.15");
@@ -20,6 +19,6 @@ public final class StandardTaxBands {
         return List.of(
                 new FlatRateTaxBand(LOW_BAND_UPPER_LIMIT, LOW_BAND_RATE),
                 new FlatRateTaxBand(MEDIUM_BAND_UPPER_LIMIT, MEDIUM_BAND_RATE),
-                new FlatRateTaxBand(NO_UPPER_LIMIT, HIGH_BAND_RATE));
+                FlatRateTaxBand.unbounded(HIGH_BAND_RATE));
     }
 }

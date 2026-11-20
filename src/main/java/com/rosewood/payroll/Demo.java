@@ -1,11 +1,17 @@
 package com.rosewood.payroll;
 
+import java.math.BigDecimal;
+
 import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
 import com.rosewood.payroll.exceptions.PayrollException;
 
-import java.math.BigDecimal;
-
+//Console demonstration using sample data only; it is not part of the payroll library.
 public class Demo {
+
+    private static final double STANDARD_HOURS = 40;
+    private static final double OVERTIME_HOURS = 50;
+    private static final String EFUA_HOURLY_RATE = "20";
+    private static final String KWAME_HOURLY_RATE = "30";
 
     public static void main(String[] args) {
         PayrollCalculator calculator = new PayrollCalculator(
@@ -13,9 +19,9 @@ public class Demo {
                 new GrossPayCalculator(),
                 new TaxCalculator(StandardTaxBands.create()));
 
-        report(calculator, "e1", 40, "20");
-        report(calculator, "e2", 50, "30");
-        report(calculator, "unknown", 40, "20");
+        report(calculator, "e1", STANDARD_HOURS, EFUA_HOURLY_RATE);
+        report(calculator, "e2", OVERTIME_HOURS, KWAME_HOURLY_RATE);
+        report(calculator, "unknown", STANDARD_HOURS, EFUA_HOURLY_RATE);
     }
 
     private static void report(

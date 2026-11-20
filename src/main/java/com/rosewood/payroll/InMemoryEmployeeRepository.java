@@ -1,11 +1,12 @@
 package com.rosewood.payroll;
 
-import com.rosewood.payroll.exceptions.InvalidInputException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.rosewood.payroll.exceptions.InvalidInputException;
+
+//Sample data for the demo and tests; a real deployment supplies its own EmployeeRepository.
 public class InMemoryEmployeeRepository implements EmployeeRepository {
 
     private final Map<String, Employee> employees = new HashMap<>();

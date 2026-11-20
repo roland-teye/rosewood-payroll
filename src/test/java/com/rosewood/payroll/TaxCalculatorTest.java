@@ -15,7 +15,7 @@ class TaxCalculatorTest {
             new TaxCalculator(StandardTaxBands.create());
 
     @Test
-    void shouldApplyLowTaxRateForGrossBelow1000() {
+    void taxesGrossBelow1000AtTheLowRate() {
         BigDecimal gross = new BigDecimal("500");
         BigDecimal tax = calculator.taxOn(gross);
 
@@ -23,7 +23,7 @@ class TaxCalculatorTest {
     }
 
     @Test
-    void shouldApplyMediumTaxRateForGrossBetween1000And5000() {
+    void taxesGrossBetween1000And5000AtTheMediumRate() {
         BigDecimal gross = new BigDecimal("2000");
         BigDecimal tax = calculator.taxOn(gross);
 
@@ -31,7 +31,7 @@ class TaxCalculatorTest {
     }
 
     @Test
-    void shouldApplyHighTaxRateForGrossAbove5000() {
+    void taxesGrossAbove5000AtTheHighRate() {
         BigDecimal gross = new BigDecimal("6000");
         BigDecimal tax = calculator.taxOn(gross);
 
@@ -39,7 +39,7 @@ class TaxCalculatorTest {
     }
 
     @Test
-    void shouldSelectMediumTaxBandWhenGrossIsExactly1000() {
+    void grossExactly1000FallsInTheMediumBand() {
         BigDecimal gross = new BigDecimal("1000");
         BigDecimal tax = calculator.taxOn(gross);
 
@@ -47,7 +47,7 @@ class TaxCalculatorTest {
     }
 
     @Test
-    void shouldSelectHighTaxBandWhenGrossIsExactly5000() {
+    void grossExactly5000FallsInTheHighBand() {
         BigDecimal gross = new BigDecimal("5000");
         BigDecimal tax = calculator.taxOn(gross);
 
@@ -55,17 +55,7 @@ class TaxCalculatorTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenNoTaxBandsAreProvided() {
-        List<TaxBand> emptyBands = List.of();
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new TaxCalculator(emptyBands)
-        );
-    }
-
-    @Test
-    void shouldUseHighestTaxBandWhenNoBandMatches() {
+    void usesTheLastBandWhenNoBandMatches() {
         TaxBand firstBand = new FlatRateTaxBand(
                 new BigDecimal("100"),
                 new BigDecimal("0.05")
@@ -84,6 +74,14 @@ class TaxCalculatorTest {
         BigDecimal tax = customCalculator.taxOn(gross);
 
         assertEquals(new BigDecimal("62.50"), tax);
+    }
+
+    @Test
+    void rejectsANullListOfBands() {
+        NullPointerException thrown = assertThrows(NullPointerException.class,
+                () -> new TaxCalculator(null));
+
+        assertEquals("bands must not be null", thrown.getMessage());
     }
 
     @Test

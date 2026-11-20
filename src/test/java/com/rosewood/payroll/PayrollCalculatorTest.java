@@ -44,12 +44,12 @@ class PayrollCalculatorTest {
     @Test
     void netPayIsGrossMinusTaxForTheFoundEmployee() {
         when(repository.findById("e1")).thenReturn(Optional.of(EFUA));
-        when(grossPayCalculator.calculate(40, HOURLY_RATE)).thenReturn(new BigDecimal("1000.00"));
-        when(taxCalculator.taxOn(new BigDecimal("1000.00"))).thenReturn(new BigDecimal("150.00"));
+        when(grossPayCalculator.calculate(40, HOURLY_RATE)).thenReturn(new BigDecimal("1234.56"));
+        when(taxCalculator.taxOn(new BigDecimal("1234.56"))).thenReturn(new BigDecimal("185.18"));
 
         Payslip payslip = calculator.calculatePayslip("e1", 40, HOURLY_RATE);
 
-        assertEquals(new Payslip("Efua Sarpong", new BigDecimal("850.00")), payslip);
+        assertEquals(new Payslip("Efua Sarpong", new BigDecimal("1049.38")), payslip);
     }
 
     @Test

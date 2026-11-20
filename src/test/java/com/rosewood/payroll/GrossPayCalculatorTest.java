@@ -18,7 +18,6 @@ class GrossPayCalculatorTest {
         BigDecimal hourlyRate = new BigDecimal("20");
         BigDecimal grossPay = calculator.calculate(40, hourlyRate);
 
-        // Assert
         assertEquals(new BigDecimal("800.00"), grossPay);
     }
 
@@ -106,7 +105,6 @@ class GrossPayCalculatorTest {
 
     @Test
     void shouldThrowExceptionWhenHourlyRateIsNegative() {
-        // Arrange
         BigDecimal hourlyRate = new BigDecimal("-5");
 
         assertThrows(

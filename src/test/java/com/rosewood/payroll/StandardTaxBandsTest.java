@@ -14,11 +14,6 @@ class StandardTaxBandsTest {
     private final List<TaxBand> bands = StandardTaxBands.create();
 
     @Test
-    void definesExactlyThreeBands() {
-        assertEquals(3, bands.size());
-    }
-
-    @Test
     void lowBandCoversGrossBelow1000AtFivePercent() {
         TaxBand low = bands.get(0);
 

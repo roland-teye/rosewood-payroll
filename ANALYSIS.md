@@ -191,7 +191,7 @@ being testable.
 
 | Finding | Planned response |
 |---|---|
-| 3.1 swallowed failure | Custom unchecked exceptions (`EmployeeNotFoundException`, `InvalidHoursException`, shared base); explicit input validation; keep the cause when wrapping |
+| 3.1 swallowed failure | Custom unchecked exceptions (`EmployeeNotFoundException`, `InvalidInputException`, shared base); explicit input validation; keep the cause when wrapping |
 | 3.2 hard-wired dependency | Constructor injection of `EmployeeRepository` |
 | 3.3 SRP | Separate classes for overtime/gross pay, tax calculation, and the service that coordinates them |
 | 3.4 OCP | Tax bands as an injected; a new band is a new class or entry, with no edits to existing logic |
@@ -209,7 +209,7 @@ These fill the gaps the brief leaves open
 |---|---|---|
 | Money type | `BigDecimal` for rate, gross, tax and net | Replaces `double` money (3.5) |
 | Rounding | 2 decimal places, `RoundingMode.HALF_UP` . Gross and tax are each rounded; net = gross - tax  | Payslip lines always add up exactly. Tests assert exact values such as `949.99` |
-| Hours validation | Reject `NaN`, infinite and negative values . Reject more than 120. 120 itself is accepted . Zero hours accepted  | `InvalidHoursException`. Boundary tests at 0, 120 and just above 120 |
+| Hours validation | Reject `NaN`, infinite and negative values . Reject more than 120. 120 itself is accepted . Zero hours accepted  | `InvalidInputException`. Boundary tests at 0, 120 and just above 120 |
 | Maximum hours | 120 per pay period, a named constant | Design decision by choice |
 | Hourly rate | Passed in by the caller. Negative rate rejected  | Prevent calculating negative amounts |
 | Unknown employee | The service throws `EmployeeNotFoundException`. It never returns `0`. The caller reports the employee as "unknown" and continues with the next one | The failure stays visible|

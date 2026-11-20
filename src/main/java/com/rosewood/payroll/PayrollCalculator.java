@@ -40,6 +40,8 @@ public class PayrollCalculator {
         try {
             found = repository.findById(employeeId);
         } catch (PayrollException e) {
+            // already one of our own exceptions with the right meaning: do not wrap it
+            // as a lookup failure
             throw e;
         } catch (RuntimeException e) {
             throw new EmployeeLookupException(employeeId, e);

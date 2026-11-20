@@ -1,7 +1,9 @@
-package com.rosewood.payroll;
+package com.rosewood.payroll.tax;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+
+import com.rosewood.payroll.pay.Money;
 
 public class FlatRateTaxBand implements TaxBand {
 

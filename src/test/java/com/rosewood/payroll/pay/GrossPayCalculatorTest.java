@@ -1,4 +1,4 @@
-package com.rosewood.payroll;
+package com.rosewood.payroll.pay;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
 import com.rosewood.payroll.exceptions.InvalidInputException;
+import com.rosewood.payroll.pay.GrossPayCalculator;
 
 class GrossPayCalculatorTest {
 

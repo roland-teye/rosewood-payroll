@@ -1,4 +1,4 @@
-package com.rosewood.payroll;
+package com.rosewood.payroll.pay;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

@@ -9,8 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import com.rosewood.payroll.employee.InMemoryEmployeeRepository;
 import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
 import com.rosewood.payroll.exceptions.InvalidInputException;
+import com.rosewood.payroll.pay.GrossPayCalculator;
+import com.rosewood.payroll.tax.StandardTaxBands;
+import com.rosewood.payroll.tax.TaxCalculator;
 
 class PayrollCalculatorIntegrationTest {
 

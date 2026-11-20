@@ -2,8 +2,12 @@ package com.rosewood.payroll;
 
 import java.math.BigDecimal;
 
+import com.rosewood.payroll.employee.InMemoryEmployeeRepository;
 import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
 import com.rosewood.payroll.exceptions.PayrollException;
+import com.rosewood.payroll.pay.GrossPayCalculator;
+import com.rosewood.payroll.tax.StandardTaxBands;
+import com.rosewood.payroll.tax.TaxCalculator;
 
 //Console demonstration using sample data only; it is not part of the payroll library.
 public class Demo {

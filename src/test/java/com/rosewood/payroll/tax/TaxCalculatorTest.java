@@ -1,4 +1,4 @@
-package com.rosewood.payroll;
+package com.rosewood.payroll.tax;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -8,6 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import com.rosewood.payroll.exceptions.InvalidInputException;
+import com.rosewood.payroll.tax.FlatRateTaxBand;
+import com.rosewood.payroll.tax.StandardTaxBands;
+import com.rosewood.payroll.tax.TaxBand;
+import com.rosewood.payroll.tax.TaxCalculator;
 
 class TaxCalculatorTest {
 

@@ -1,15 +1,10 @@
-package com.rosewood.payroll;
+package com.rosewood.payroll.exceptions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import org.junit.jupiter.api.Test;
-
-import com.rosewood.payroll.exceptions.EmployeeLookupException;
-import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
-import com.rosewood.payroll.exceptions.InvalidInputException;
-import com.rosewood.payroll.exceptions.PayrollException;
 
 class PayrollExceptionsTest {
 

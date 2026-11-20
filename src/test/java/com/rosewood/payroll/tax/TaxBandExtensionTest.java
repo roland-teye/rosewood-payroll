@@ -1,4 +1,4 @@
-package com.rosewood.payroll;
+package com.rosewood.payroll.tax;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -6,6 +6,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+
+import com.rosewood.payroll.tax.FlatRateTaxBand;
+import com.rosewood.payroll.tax.TaxBand;
+import com.rosewood.payroll.tax.TaxCalculator;
 
 class TaxBandExtensionTest {
 

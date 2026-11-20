@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.rosewood.payroll.employee.Employee;
+import com.rosewood.payroll.employee.EmployeeRepository;
 import com.rosewood.payroll.exceptions.EmployeeLookupException;
 import com.rosewood.payroll.exceptions.EmployeeNotFoundException;
 import com.rosewood.payroll.exceptions.PayrollException;
+import com.rosewood.payroll.pay.GrossPayCalculator;
+import com.rosewood.payroll.tax.TaxCalculator;
 
 public class PayrollCalculator {
 

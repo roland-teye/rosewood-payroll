@@ -1,4 +1,4 @@
-package com.rosewood.payroll;
+package com.rosewood.payroll.employee;
 
 import java.util.Optional;
 
@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
+import com.rosewood.payroll.employee.Employee;
+import com.rosewood.payroll.employee.InMemoryEmployeeRepository;
 import com.rosewood.payroll.exceptions.InvalidInputException;
 
 class InMemoryEmployeeRepositoryTest {

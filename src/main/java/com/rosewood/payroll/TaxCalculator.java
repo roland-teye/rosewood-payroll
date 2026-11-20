@@ -4,6 +4,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+/**
+     * @param bands the bands in the order they are tried; the first band that applies is used.
+     *              The last band is also the fallback for a gross that no band claims, so it
+     *              should be the widest band
+     */
+
 public class TaxCalculator {
 
     private final List<TaxBand> bands;
@@ -26,10 +32,10 @@ public class TaxCalculator {
                 return band;
             }
         }
-        return highestBand();
+        return fallbackBand();
     }
 
-    private TaxBand highestBand() {
+    private TaxBand fallbackBand() {
         return bands.get(bands.size() - 1);
     }
 }

@@ -18,8 +18,8 @@ class InMemoryEmployeeRepositoryTest {
         Optional<Employee> found = repository.findById("e1");
 
         assertTrue(found.isPresent());
-        assertEquals("e1", found.get().getId());
-        assertEquals("Efua Sarpong", found.get().getName());
+        assertEquals("e1", found.get().id());
+        assertEquals("Efua Sarpong", found.get().name());
     }
 
     @Test
@@ -27,7 +27,7 @@ class InMemoryEmployeeRepositoryTest {
         Optional<Employee> found = repository.findById("e2");
 
         assertTrue(found.isPresent());
-        assertEquals("Kwame Owusu", found.get().getName());
+        assertEquals("Kwame Owusu", found.get().name());
     }
 
     @Test

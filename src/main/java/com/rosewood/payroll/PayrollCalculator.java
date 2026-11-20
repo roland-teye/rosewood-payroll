@@ -32,7 +32,7 @@ public class PayrollCalculator {
         BigDecimal gross = grossPayCalculator.calculate(hoursWorked, hourlyRate);
         BigDecimal net = gross.subtract(taxCalculator.taxOn(gross));
 
-        return new Payslip(employee.getName(), net);
+        return new Payslip(employee.name(), net);
     }
 
     private Employee findEmployee(String employeeId) {

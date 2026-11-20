@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+import com.rosewood.payroll.exceptions.InvalidInputException;
+
 /**
      * @param bands the bands in the order they are tried; the first band that applies is used.
      *              The last band is also the fallback for a gross that no band claims, so it
@@ -17,7 +19,7 @@ public class TaxCalculator {
     public TaxCalculator(List<TaxBand> bands) {
         Objects.requireNonNull(bands, "bands must not be null");
         if (bands.isEmpty()) {
-            throw new IllegalArgumentException("At least one tax band is required");
+            throw new InvalidInputException("At least one tax band is required");
         }
         this.bands = List.copyOf(bands);
     }

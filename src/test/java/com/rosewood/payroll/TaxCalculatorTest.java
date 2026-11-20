@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
+import com.rosewood.payroll.exceptions.InvalidInputException;
+
 class TaxCalculatorTest {
 
     private final TaxCalculator calculator =
@@ -85,10 +87,12 @@ class TaxCalculatorTest {
     }
 
     @Test
-    void shouldRejectANullListOfBands() {
-        NullPointerException thrown = assertThrows(NullPointerException.class,
-                () -> new TaxCalculator(null));
+    void rejectsAnEmptyListOfBands() {
+        List<TaxBand> emptyBands = List.of();
 
-        assertEquals("bands must not be null", thrown.getMessage());
+        InvalidInputException exception = assertThrows(
+                InvalidInputException.class, () -> new TaxCalculator(emptyBands));
+
+        assertEquals("At least one tax band is required", exception.getMessage());
     }
 }

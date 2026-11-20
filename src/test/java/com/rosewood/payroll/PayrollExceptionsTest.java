@@ -39,7 +39,8 @@ class PayrollExceptionsTest {
     @Test
     void everySpecificFailureIsAnUncheckedPayrollException() {
         assertInstanceOf(PayrollException.class, new EmployeeNotFoundException("e1"));
-        assertInstanceOf(PayrollException.class, new EmployeeLookupException("e1", new RuntimeException()));
+        assertInstanceOf(PayrollException.class,
+             new EmployeeLookupException("e1", new RuntimeException()));
         assertInstanceOf(PayrollException.class, new InvalidInputException("x"));
         assertInstanceOf(RuntimeException.class, new PayrollException("x"));
     }

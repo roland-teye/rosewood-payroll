@@ -172,7 +172,7 @@ preconditions of the pay calculation. If validation rules grow, they should move
 | Hourly rate must be provided and **positive** | a zero or negative rate is not a real pay rate | accepting zero |
 | An unknown employee throws; it never returns `0` | a failure must not look like a valid pay figure | returning `0`, or `null` |
 | `findById` returns `Optional<Employee>` | absence becomes part of the type; the old code forgot to check `null` | returning `null` |
-| Overtime hours computed as `max(hours - 40, 0)` | one fewer branch; reads as "hours above 40" | `if (hours > 40)` (see section 10) |
+| Overtime hours computed as `max(hours - 40, 0)` | one fewer branch; reads as "hours above 40" | `if (hours > 40)` |
 | `Money` and `StandardTaxBands` are static utilities | stateless, nothing to replace or inject | injecting a rounding object |
  
 ---
@@ -300,5 +300,6 @@ the analysis criticises.
 | Tests | one commit per area, replacing the hollow suite |
 | Tooling | exclude `Demo` from analysis; streamline gross pay; mutation gate |
 | Docs | this README |
+| Clean up | update Employee |
  
 
